@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1200" viewBox="0 0 1000 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Placeholder foto profil</title>
+  <desc id="desc">Siluet netral untuk foto profil yang belum diunggah.</desc>
+  <rect width="1000" height="1200" fill="#12151D"/>
+  <circle cx="500" cy="390" r="210" fill="#252A36"/>
+  <path d="M130 1200c25-310 170-500 370-500s345 190 370 500" fill="#252A36"/>
+  <circle cx="790" cy="170" r="170" fill="#7C6CF2" opacity=".16"/>
+</svg>

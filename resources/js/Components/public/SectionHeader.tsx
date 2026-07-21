@@ -1,0 +1,3 @@
+export function SectionHeader({ eyebrow, title, description, index }: { eyebrow?: string; title: string; description?: string | null; index?: string }) {
+    return <div className="max-w-3xl" data-reveal>{eyebrow && <div className="mb-5 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em] text-muted">{index && <span className="text-accent">[{index}]</span>}<span>{eyebrow}</span><span className="h-px w-10 bg-border" /></div>}<h2 className="font-heading text-3xl font-semibold leading-tight tracking-[-0.04em] sm:text-5xl">{title}</h2>{description && <p className="mt-5 max-w-2xl leading-7 text-muted">{description}</p>}</div>;
+}

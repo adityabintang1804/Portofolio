@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        color-scheme: light;
+        --color-background: #f3f4ef;
+        --color-surface: #fafbf7;
+        --color-surface-secondary: #e8eae3;
+        --color-border: #c9cec5;
+        --color-foreground: #121614;
+        --color-muted: #626b66;
+        --color-primary: #126c54;
+        --color-primary-foreground: #f8fff8;
+        --color-accent: #126c54;
+        --color-success: #15803d;
+        --color-warning: #b45309;
+        --color-destructive: #dc2626;
+    }
+
+    .dark {
+        color-scheme: dark;
+        --color-background: #0a0d0c;
+        --color-surface: #101513;
+        --color-surface-secondary: #171d1a;
+        --color-border: #2b342f;
+        --color-foreground: #edf1eb;
+        --color-muted: #99a39d;
+        --color-primary: #86e6bb;
+        --color-primary-foreground: #07110d;
+        --color-accent: #86e6bb;
+        --color-success: #22c55e;
+        --color-warning: #f59e0b;
+        --color-destructive: #ef4444;
+    }
+
+    * {
+        @apply border-border;
+    }
+
+    html {
+        @apply bg-background;
+    }
+
+    body {
+        @apply min-h-screen overflow-x-hidden bg-background text-foreground;
+    }
+
+    ::selection {
+        background: var(--color-primary);
+        color: var(--color-primary-foreground);
+    }
+
+    input,
+    select,
+    textarea {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    :focus-visible {
+        @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+    }
+}
+
+@layer components {
+    .public-grid {
+        background-image: linear-gradient(to right, color-mix(in srgb, var(--color-border) 34%, transparent) 1px, transparent 1px);
+        background-size: min(8.333vw, 120px) 100%;
+    }
+
+    .editorial-link {
+        @apply inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.14em] text-foreground transition-colors hover:text-accent;
+    }
+
+    .corner-mark::before,
+    .corner-mark::after {
+        content: '';
+        @apply absolute size-4 border-accent;
+    }
+
+    .corner-mark::before { @apply left-0 top-0 border-l border-t; }
+    .corner-mark::after { @apply bottom-0 right-0 border-b border-r; }
+}
+
+@keyframes ticker {
+    to { transform: translateX(-50%); }
+}
+
+.ticker-track {
+    animation: ticker 24s linear infinite;
+    width: max-content;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

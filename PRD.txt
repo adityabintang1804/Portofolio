@@ -1,0 +1,2045 @@
+# MASTER PRD DAN INSTRUKSI IMPLEMENTASI
+
+## Personal Portfolio Aditya
+
+---
+
+# 1. Instruksi Utama untuk Coding Agent
+
+Baca seluruh dokumen ini sebelum membuat atau mengubah kode.
+
+Bangun aplikasi sesuai kebutuhan yang tertulis dalam PRD ini. Jangan menghilangkan fitur utama, mengubah arsitektur tanpa alasan kuat, atau menambahkan fitur besar yang tidak diminta.
+
+Apabila terdapat detail kecil yang belum disebutkan, gunakan keputusan teknis yang paling sederhana, aman, modern, dan mudah dirawat. Jangan menghentikan pengerjaan hanya karena detail minor belum tersedia.
+
+Sebelum mulai implementasi:
+
+1. Periksa struktur project dan dependensi yang sudah tersedia.
+2. Buat rencana implementasi bertahap.
+3. Tentukan migration, model, controller, service, route, komponen, dan halaman yang diperlukan.
+4. Kerjakan fitur secara bertahap dari fondasi hingga tampilan publik.
+5. Pastikan aplikasi tetap dapat dijalankan pada setiap tahap.
+6. Jalankan formatter, type checking, migration, seeder, build, dan test setelah implementasi.
+7. Jangan hanya membuat tampilan statis. Seluruh konten utama harus terhubung ke database dan dashboard admin.
+8. Jangan menyimpan konten profil, proyek, pengalaman, skill, sertifikat, dan teks halaman secara permanen di komponen React.
+9. Gunakan data dummy melalui Laravel Seeder agar seluruh halaman langsung memiliki konten dan dapat diedit dari dashboard.
+10. Jangan mengekspos API key Groq atau Gemini pada frontend.
+11. Gunakan bahasa Indonesia untuk isi dummy, dashboard, validasi, notifikasi, dan antarmuka awal.
+12. Gunakan penamaan kode, class, function, database field, dan variable dalam bahasa Inggris.
+13. Gunakan TypeScript secara konsisten dan hindari penggunaan `any` kecuali benar-benar diperlukan.
+14. Gunakan komponen reusable dan hindari duplikasi kode.
+15. Jangan membuat desain generik yang terlihat seperti template admin biasa. Website publik harus memiliki identitas visual modern, interaktif, dan profesional.
+16. Dashboard admin harus lebih mengutamakan kemudahan penggunaan daripada animasi.
+17. Semua perubahan penting harus tetap mengikuti dokumen ini sebagai sumber utama kebutuhan produk.
+
+---
+
+# 2. Ringkasan Produk
+
+Bangun website portofolio personal milik Aditya, mahasiswa Informatika yang memiliki fokus pada:
+
+* Web development
+* Artificial intelligence
+* Machine learning
+* Data analysis
+* Software development
+
+Website digunakan untuk:
+
+* Personal branding
+* Melamar magang atau pekerjaan
+* Menampilkan proyek akademik dan profesional
+* Menampilkan kemampuan teknis
+* Menyediakan CV dan informasi kontak
+* Membantu recruiter mengenal Aditya melalui chatbot
+* Menunjukkan kemampuan full-stack development menggunakan Laravel dan React
+
+Website memiliki dua bagian utama:
+
+1. Website publik untuk pengunjung.
+2. Dashboard admin untuk mengelola seluruh konten website.
+
+---
+
+# 3. Tujuan Produk
+
+Website harus mampu:
+
+1. Menampilkan profil Aditya secara profesional.
+2. Menampilkan proyek unggulan dalam bentuk studi kasus.
+3. Memudahkan recruiter menemukan skill, pengalaman, CV, dan informasi kontak.
+4. Membuat seluruh konten dapat diperbarui melalui dashboard tanpa mengubah kode.
+5. Menyediakan chatbot yang menjawab berdasarkan data portofolio.
+6. Memiliki tampilan responsif dan nyaman pada desktop maupun mobile.
+7. Menggunakan animasi yang modern tanpa mengorbankan performa.
+8. Memiliki SEO dasar yang baik.
+9. Menjadi salah satu proyek unggulan dalam portofolio Aditya.
+
+---
+
+# 4. Target Pengguna
+
+## 4.1 Recruiter dan HR
+
+Kebutuhan:
+
+* Mengetahui profil singkat Aditya.
+* Melihat skill yang relevan.
+* Melihat proyek unggulan.
+* Mengunduh CV.
+* Menghubungi Aditya.
+* Mengetahui ketersediaan untuk magang atau pekerjaan.
+
+## 4.2 Dosen dan Penilai Akademik
+
+Kebutuhan:
+
+* Melihat proyek akademik.
+* Mengetahui proses pengembangan.
+* Mengetahui teknologi yang digunakan.
+* Melihat hasil proyek.
+
+## 4.3 Calon Klien atau Kolaborator
+
+Kebutuhan:
+
+* Melihat kemampuan web development.
+* Melihat hasil pekerjaan.
+* Mengetahui layanan atau bidang yang dikuasai.
+* Mengirim pesan melalui halaman kontak.
+
+## 4.4 Admin
+
+Admin adalah Aditya sendiri.
+
+Kebutuhan:
+
+* Login dengan aman.
+* Mengelola semua konten.
+* Mengubah data dummy menjadi data asli.
+* Mengunggah gambar dan CV.
+* Mengatur proyek unggulan.
+* Membaca pesan masuk.
+* Mengelola FAQ chatbot.
+* Mengubah pengaturan website.
+
+Tidak ada registrasi publik.
+
+---
+
+# 5. Teknologi Utama
+
+Gunakan stack berikut:
+
+## Backend
+
+* Laravel
+* PHP
+* MySQL
+* Laravel session authentication
+* Laravel validation
+* Laravel Storage
+* Laravel HTTP Client
+* Laravel Rate Limiting
+* Laravel Seeder dan Factory
+
+## Frontend
+
+* React
+* TypeScript
+* Inertia.js
+* Vite
+* Tailwind CSS
+* shadcn/ui
+
+## Animasi
+
+* GSAP
+* GSAP ScrollTrigger
+* Motion for React
+
+Gunakan package:
+
+```bash
+npm install gsap @gsap/react motion
+```
+
+## Ikon
+
+* Lucide React untuk ikon antarmuka.
+* Simple Icons untuk logo teknologi dan brand.
+
+## Chatbot
+
+* Groq sebagai AI provider utama.
+* Gemini sebagai AI provider cadangan.
+* Database portofolio sebagai sumber pengetahuan utama.
+* FAQ lokal sebagai jawaban tanpa AI.
+
+---
+
+# 6. Arsitektur Aplikasi
+
+Gunakan satu repository dengan pola Laravel, Inertia, dan React.
+
+Alur halaman publik:
+
+```text
+Browser
+→ Laravel Route
+→ Controller
+→ Query Database
+→ Inertia Response
+→ React Page
+```
+
+Alur dashboard:
+
+```text
+Admin
+→ Authentication Middleware
+→ Laravel Controller
+→ Validation
+→ Database
+→ Inertia React Dashboard
+```
+
+Alur chatbot:
+
+```text
+React Chatbot
+→ Laravel Chatbot Controller
+→ FAQ dan Database
+→ Groq
+→ Gemini jika Groq gagal
+→ Fallback statis jika keduanya gagal
+```
+
+Jangan membuat React sebagai project terpisah dan jangan menggunakan arsitektur REST API terpisah kecuali untuk endpoint chatbot yang memang membutuhkan respons JSON.
+
+---
+
+# 7. Arah Desain
+
+Gunakan konsep:
+
+> Dark Modern Tech Portfolio dengan gaya minimal, editorial, dan bento grid.
+
+Karakter desain:
+
+* Modern
+* Profesional
+* Bersih
+* Responsif
+* Tidak terlalu ramai
+* Memiliki nuansa teknologi
+* Fokus pada proyek dan isi
+* Animasi terasa halus
+* Tidak terlihat seperti template AI generik
+
+Komposisi desain:
+
+```text
+70% minimal profesional
+20% nuansa teknologi
+10% elemen kreatif
+```
+
+---
+
+# 8. Design System
+
+## 8.1 Warna Awal
+
+Gunakan nilai awal berikut dan simpan sebagai design token:
+
+```text
+Background utama : #090B10
+Surface           : #12151D
+Surface sekunder  : #171B24
+Border            : #252A36
+Text utama        : #F5F7FA
+Text sekunder     : #9CA3AF
+Accent utama      : #7C6CF2
+Accent sekunder   : #44C7F4
+Success           : #22C55E
+Warning           : #F59E0B
+Error             : #EF4444
+```
+
+Sediakan light mode dengan token warna yang sesuai.
+
+Theme memiliki pilihan:
+
+* Dark
+* Light
+* System
+
+Simpan pilihan pengguna pada local storage.
+
+## 8.2 Tipografi
+
+Gunakan maksimal dua font utama dan satu font opsional untuk kode.
+
+Rekomendasi:
+
+```text
+Heading : Sora atau Manrope
+Body    : Inter atau Geist
+Code    : JetBrains Mono
+```
+
+Gunakan skala tipografi yang konsisten dan responsif.
+
+## 8.3 Spacing
+
+Gunakan sistem spacing berbasis kelipatan empat:
+
+```text
+4, 8, 12, 16, 24, 32, 48, 64, 96, 128
+```
+
+## 8.4 Radius
+
+Gunakan standar:
+
+```text
+Button kecil : 8px
+Input        : 10px
+Card         : 16px
+Card besar   : 20px atau 24px
+Modal        : 20px
+Avatar       : full rounded
+```
+
+## 8.5 Ikon
+
+Gunakan:
+
+```text
+Lucide React : UI, navigasi, dashboard, tombol, status
+Simple Icons : React, Laravel, Python, GitHub, MySQL, dan brand lain
+```
+
+Jangan mencampurkan library ikon lain tanpa alasan kuat.
+
+Buat komponen reusable seperti:
+
+```text
+AppIcon
+TechnologyIcon
+IconButton
+```
+
+Admin hanya menyimpan nama atau key ikon, bukan file SVG bebas.
+
+---
+
+# 9. Struktur Halaman Publik
+
+Website publik memiliki halaman:
+
+```text
+/
+ /about
+ /projects
+ /projects/{slug}
+ /experience
+ /certificates
+ /contact
+ /cv
+```
+
+Tambahkan halaman:
+
+```text
+404
+500
+Maintenance atau error fallback
+```
+
+---
+
+# 10. Halaman Beranda
+
+Urutan section:
+
+1. Navbar
+2. Hero
+3. Technology marquee atau technology list
+4. About preview
+5. Featured projects
+6. Skills
+7. Experience preview
+8. Certificates preview
+9. Contact call-to-action
+10. Footer
+11. Chatbot floating widget
+
+## 10.1 Navbar
+
+Isi:
+
+* Logo atau nama Aditya
+* Beranda
+* Tentang
+* Proyek
+* Pengalaman
+* Sertifikat
+* Kontak
+* Tombol download CV
+* Theme switcher
+* Mobile menu
+
+Navbar:
+
+* Sticky
+* Memiliki background blur saat scroll
+* Memiliki active state
+* Dapat digunakan dengan keyboard
+
+## 10.2 Hero
+
+Data hero berasal dari database.
+
+Isi:
+
+* Badge atau greeting
+* Nama
+* Headline
+* Deskripsi
+* Status ketersediaan
+* Tombol lihat proyek
+* Tombol download CV
+* Link GitHub
+* Link LinkedIn
+* Foto atau visual utama
+* Scroll indicator
+
+Contoh dummy:
+
+```text
+Hello, saya Aditya.
+
+Informatics Student, AI Enthusiast, and Web Developer.
+
+Saya membangun pengalaman digital melalui pengembangan web,
+artificial intelligence, dan pengolahan data.
+
+Open for Internship and Collaboration
+```
+
+## 10.3 Featured Projects
+
+Tampilkan 3 sampai 5 proyek unggulan.
+
+Gunakan layout bento grid.
+
+Setiap kartu berisi:
+
+* Thumbnail
+* Judul
+* Deskripsi singkat
+* Kategori
+* Peran
+* Teknologi utama
+* Tombol lihat studi kasus
+* Tombol GitHub atau demo jika tersedia
+
+## 10.4 Skills
+
+Tampilkan skill berdasarkan kategori:
+
+* Frontend
+* Backend
+* Artificial Intelligence
+* Data
+* Mobile
+* Tools
+
+Jangan gunakan persentase kemampuan.
+
+## 10.5 Experience Preview
+
+Tampilkan beberapa pengalaman terbaru dalam timeline singkat.
+
+## 10.6 Certificate Preview
+
+Tampilkan sertifikat unggulan.
+
+## 10.7 Contact CTA
+
+Isi:
+
+* Judul ajakan
+* Deskripsi
+* Tombol kontak
+* Email
+* LinkedIn
+
+---
+
+# 11. Halaman Tentang
+
+Tampilkan:
+
+* Foto profil
+* Profil lengkap
+* Latar belakang
+* Fokus bidang
+* Tujuan karier
+* Pendidikan
+* Statistik
+* Skill utama
+* Status ketersediaan
+* Tombol download CV
+
+Semua konten berasal dari dashboard.
+
+---
+
+# 12. Halaman Proyek
+
+## 12.1 Daftar Proyek
+
+Fitur:
+
+* Semua proyek
+* Filter kategori
+* Filter teknologi
+* Pencarian
+* Proyek unggulan
+* Pagination atau load more
+* Empty state
+* Loading state
+* URL filter yang dapat dibagikan jika memungkinkan
+
+Kategori dummy:
+
+```text
+Artificial Intelligence
+Machine Learning
+Data Analysis
+Web Development
+Mobile Development
+Academic Project
+```
+
+## 12.2 Detail Proyek
+
+Setiap proyek memiliki halaman studi kasus.
+
+Struktur:
+
+1. Project overview
+2. Latar belakang
+3. Permasalahan
+4. Tujuan
+5. Peran dan kontribusi
+6. Teknologi
+7. Proses pengembangan
+8. Tantangan
+9. Solusi
+10. Hasil
+11. Galeri
+12. Link GitHub
+13. Link demo
+14. Proyek terkait
+
+Gunakan slug:
+
+```text
+/projects/skillmatch-ai-career-platform
+```
+
+Data detail proyek harus dapat diedit dari dashboard.
+
+---
+
+# 13. Halaman Experience
+
+Gunakan timeline responsif.
+
+Setiap data berisi:
+
+* Posisi
+* Organisasi
+* Lokasi
+* Tanggal mulai
+* Tanggal selesai
+* Status saat ini
+* Deskripsi
+* Daftar kontribusi
+* Teknologi atau skill terkait
+* Logo organisasi
+
+---
+
+# 14. Halaman Sertifikat
+
+Fitur:
+
+* Grid sertifikat
+* Filter berdasarkan penerbit atau kategori
+* Modal preview
+* Link credential
+* Tanggal penerbitan
+* Empty state
+* Responsive layout
+
+Modal sertifikat menggunakan Motion for React.
+
+---
+
+# 15. Halaman Kontak
+
+Form berisi:
+
+* Nama
+* Email
+* Perusahaan atau instansi, opsional
+* Subjek
+* Pesan
+
+Fitur:
+
+* Validasi frontend
+* Validasi server
+* Rate limiting
+* Proteksi spam
+* Honeypot atau solusi sederhana sejenis
+* Success message
+* Error message
+* Menyimpan pesan ke database
+* Tidak perlu registrasi
+
+Tambahkan informasi:
+
+* Email
+* LinkedIn
+* GitHub
+* Lokasi umum
+* Status ketersediaan
+
+---
+
+# 16. CV
+
+Fitur:
+
+* Download CV
+* Preview CV jika memungkinkan
+* File CV dapat diubah dari dashboard
+* Catat event download untuk analytics sederhana
+* Gunakan file dari Laravel Storage
+* Tampilkan fallback jika file belum tersedia
+
+Versi pertama cukup menggunakan satu bahasa CV.
+
+---
+
+# 17. Dashboard Admin
+
+Route dashboard menggunakan prefix:
+
+```text
+/admin
+```
+
+Dashboard dilindungi middleware authentication.
+
+Tidak ada registrasi publik.
+
+Sidebar:
+
+```text
+Dashboard
+Profil
+Hero dan Section
+Proyek
+Kategori Proyek
+Teknologi
+Skills
+Pengalaman
+Pendidikan
+Sertifikat
+CV
+Pesan Masuk
+FAQ Chatbot
+Pengaturan Website
+```
+
+## 17.1 Dashboard Overview
+
+Tampilkan:
+
+* Jumlah proyek
+* Jumlah proyek draft
+* Jumlah skill
+* Jumlah pengalaman
+* Jumlah sertifikat
+* Jumlah pesan
+* Pesan belum dibaca
+* Status chatbot
+* Aktivitas terbaru
+* Proyek terbaru
+
+## 17.2 Pengelolaan Profil
+
+Admin dapat mengubah:
+
+* Nama
+* Headline
+* Hero description
+* About description
+* Foto
+* Lokasi
+* Email
+* Nomor telepon
+* LinkedIn
+* GitHub
+* Status ketersediaan
+* Teks tombol
+* CV
+
+## 17.3 Pengelolaan Proyek
+
+Fitur:
+
+* List
+* Search
+* Filter status
+* Tambah
+* Edit
+* Hapus
+* Soft delete jika diperlukan
+* Draft
+* Published
+* Archived
+* Featured
+* Urutan tampilan
+* Preview
+* Thumbnail
+* Galeri
+* Kategori
+* Teknologi
+* GitHub URL
+* Demo URL
+* SEO title
+* SEO description
+* Open Graph image
+* Slug otomatis dan dapat diedit
+
+Form proyek dibagi menjadi:
+
+1. Informasi dasar
+2. Studi kasus
+3. Kategori dan teknologi
+4. Media
+5. Link
+6. SEO
+7. Status publikasi
+
+## 17.4 Pengelolaan Skill
+
+Fitur:
+
+* Tambah
+* Edit
+* Hapus
+* Kategori
+* Icon key
+* Deskripsi
+* Urutan
+* Status aktif
+* Hubungkan dengan proyek jika diperlukan
+
+## 17.5 Pengelolaan Experience
+
+Fitur CRUD lengkap, urutan timeline, logo, periode, dan status current.
+
+## 17.6 Pengelolaan Pendidikan
+
+Fitur CRUD lengkap.
+
+## 17.7 Pengelolaan Sertifikat
+
+Fitur:
+
+* CRUD
+* Upload gambar
+* Credential URL
+* Issuer
+* Tanggal
+* Featured
+* Kategori
+* Preview
+
+## 17.8 Pengelolaan Pesan
+
+Status:
+
+```text
+Unread
+Read
+Archived
+```
+
+Fitur:
+
+* Buka pesan
+* Tandai dibaca
+* Tandai belum dibaca
+* Arsip
+* Hapus
+* Filter
+* Search
+* Link membalas melalui email
+
+## 17.9 Pengaturan Website
+
+Admin dapat mengubah:
+
+* Nama website
+* Logo
+* Favicon
+* Footer
+* Meta default
+* Open Graph default
+* Social links
+* Theme default
+* Status chatbot
+* Pesan pembuka chatbot
+* Suggested questions
+* Maintenance setting jika diperlukan
+
+---
+
+# 18. Chatbot
+
+## 18.1 Tujuan
+
+Chatbot membantu pengunjung mengenal:
+
+* Profil Aditya
+* Skill
+* Pengalaman
+* Pendidikan
+* Proyek
+* Sertifikasi
+* Status ketersediaan
+* CV
+* Kontak
+
+Chatbot tidak digunakan untuk menjawab topik umum di luar portofolio.
+
+## 18.2 Provider
+
+```text
+Primary provider  : Groq
+Fallback provider : Gemini
+Final fallback    : FAQ dan navigasi statis
+```
+
+## 18.3 Alur Chatbot
+
+```text
+Pengguna mengirim pesan
+→ Validasi input
+→ Periksa intent sederhana
+→ Cari FAQ
+→ Cari data langsung dari database
+→ Jika jawaban dapat dibuat tanpa AI, jawab langsung
+→ Jika perlu analisis, susun context portofolio
+→ Kirim ke Groq
+→ Jika Groq gagal, kirim ke Gemini
+→ Jika keduanya gagal, gunakan fallback statis
+→ Simpan log teknis seperlunya
+```
+
+## 18.4 Pertanyaan yang Tidak Memerlukan AI
+
+Contoh:
+
+```text
+Download CV
+Tampilkan proyek Laravel
+Apa email Aditya?
+Apa skill frontend Aditya?
+Tampilkan pengalaman terbaru
+```
+
+Pertanyaan tersebut dijawab langsung dari database.
+
+## 18.5 Pertanyaan yang Menggunakan AI
+
+Contoh:
+
+```text
+Apakah Aditya cocok untuk posisi junior full-stack developer?
+Apa proyek Aditya yang paling relevan untuk posisi AI Engineer?
+Rangkum pengalaman Aditya dalam tiga kalimat.
+```
+
+Laravel harus mengambil data relevan terlebih dahulu, kemudian mengirimkannya sebagai context kepada AI.
+
+## 18.6 Aturan Jawaban
+
+System prompt harus mengatur bahwa chatbot:
+
+* Hanya menjawab berdasarkan data portofolio.
+* Tidak mengarang proyek, skill, pengalaman, atau pencapaian.
+* Tidak memberikan informasi sensitif.
+* Menjawab singkat, ramah, dan mudah dipahami.
+* Mengarahkan ke halaman proyek, CV, atau kontak jika relevan.
+* Menolak pertanyaan di luar konteks dengan sopan.
+* Tidak menyebut API key.
+* Tidak perlu menyebut provider yang sedang digunakan kepada pengguna.
+
+Contoh penolakan:
+
+```text
+Maaf, saya hanya dapat membantu menjawab pertanyaan mengenai
+profil, kemampuan, pengalaman, dan proyek Aditya.
+```
+
+## 18.7 Fitur UI Chatbot
+
+* Floating chat button
+* Chat window
+* Header
+* Status
+* Welcome message
+* Suggested questions
+* Message bubble
+* Typing indicator
+* Input
+* Send button
+* Error state
+* Offline state
+* Clear conversation
+* Mobile fullscreen atau near-fullscreen
+* Tombol menuju proyek
+* Tombol download CV
+* Tombol kontak
+
+Gunakan Motion for React untuk animasi chatbot.
+
+## 18.8 Rate Limit
+
+Gunakan batas awal:
+
+```text
+5 sampai 10 pesan per menit per session atau pengunjung
+Maksimal 500 karakter per pertanyaan
+Maksimal jawaban sekitar 400 output token
+Timeout AI sekitar 10 sampai 15 detik
+Riwayat yang dikirim maksimal 6 sampai 10 pesan terakhir
+```
+
+## 18.9 Error yang Memicu Gemini
+
+Fallback ke Gemini jika Groq mengalami:
+
+* HTTP 429
+* HTTP 500
+* HTTP 502
+* HTTP 503
+* Timeout
+* Respons kosong
+* Respons tidak valid
+
+Jangan menggunakan Gemini sebagai fallback untuk request invalid atau kesalahan validasi aplikasi.
+
+## 18.10 Environment Variable
+
+Gunakan konfigurasi seperti:
+
+```env
+AI_PRIMARY_PROVIDER=groq
+AI_FALLBACK_PROVIDER=gemini
+
+GROQ_API_KEY=
+GROQ_MODEL=
+
+GEMINI_API_KEY=
+GEMINI_MODEL=
+
+AI_TIMEOUT=15
+AI_MAX_OUTPUT_TOKENS=400
+```
+
+Jangan mengirimkan API key ke frontend.
+
+## 18.11 Service Structure
+
+Gunakan struktur:
+
+```text
+app/
+├── Contracts/
+│   └── AiProviderInterface.php
+├── Services/
+│   └── AI/
+│       ├── GroqProvider.php
+│       ├── GeminiProvider.php
+│       ├── AiRouterService.php
+│       └── PortfolioContextService.php
+└── Http/Controllers/
+    └── ChatbotController.php
+```
+
+Setiap provider harus menghasilkan format respons internal yang seragam.
+
+---
+
+# 19. Animasi
+
+## 19.1 GSAP
+
+Gunakan GSAP untuk:
+
+* Hero opening timeline
+* Text reveal
+* Parallax
+* ScrollTrigger
+* Experience timeline
+* Project showcase
+* Section pinning jika benar-benar diperlukan
+* Horizontal motion secukupnya
+
+Gunakan `@gsap/react` dan lakukan cleanup dengan benar.
+
+## 19.2 Motion for React
+
+Gunakan Motion untuk:
+
+* Hover card
+* Button interaction
+* Mobile menu
+* Modal
+* Filter proyek
+* Layout transition
+* Toast
+* Chatbot
+* Loading
+* Page transition
+* Accordion
+
+## 19.3 Aturan Animasi
+
+* Jangan menggunakan GSAP dan Motion untuk properti yang sama pada elemen yang sama.
+* Gunakan GSAP pada wrapper dan Motion pada child jika keduanya diperlukan.
+* Jangan membuat semua elemen bergerak.
+* Kurangi animasi pada mobile.
+* Dukung `prefers-reduced-motion`.
+* Animasi tidak boleh menghalangi interaksi.
+* Hindari scroll hijacking yang mengganggu.
+* Hindari intro panjang yang harus ditunggu pengguna.
+* Jangan membuat animasi menyebabkan layout shift.
+
+Durasi acuan:
+
+```text
+Hover kecil    : 150–250ms
+Modal dan menu : 250–350ms
+Section reveal : 500–700ms
+Hero sequence  : 700–1200ms
+```
+
+---
+
+# 20. Model Database
+
+Buat migration, model, factory, seeder, relationship, validation, dan controller yang diperlukan.
+
+## 20.1 users
+
+Gunakan tabel user Laravel untuk admin.
+
+Kolom utama:
+
+```text
+id
+name
+email
+password
+timestamps
+```
+
+## 20.2 profiles
+
+```text
+id
+name
+headline
+hero_badge
+hero_description
+about_description
+profile_image
+location
+email
+phone
+linkedin_url
+github_url
+availability_status
+availability_text
+cv_file
+timestamps
+```
+
+## 20.3 site_settings
+
+Gunakan pola key-value.
+
+```text
+id
+key
+value
+type
+group
+timestamps
+```
+
+Contoh key:
+
+```text
+site_name
+site_description
+projects_title
+projects_description
+contact_title
+contact_description
+footer_text
+default_meta_title
+default_meta_description
+chatbot_enabled
+chatbot_welcome_message
+```
+
+## 20.4 project_categories
+
+```text
+id
+name
+slug
+description
+display_order
+is_active
+timestamps
+```
+
+## 20.5 technologies
+
+```text
+id
+name
+slug
+icon_key
+brand_color
+display_order
+is_active
+timestamps
+```
+
+Warna brand dapat disimpan, tetapi tampilan tidak wajib selalu menggunakan warna asli brand.
+
+## 20.6 projects
+
+```text
+id
+project_category_id
+title
+slug
+short_description
+overview
+background
+problem
+goal
+role
+process
+challenges
+solution
+result
+thumbnail
+github_url
+demo_url
+status
+is_featured
+display_order
+published_at
+seo_title
+seo_description
+og_image
+timestamps
+soft_deletes opsional
+```
+
+Jika rich text editor menggunakan JSON, sesuaikan tipe field konten.
+
+## 20.7 project_technology
+
+Pivot:
+
+```text
+project_id
+technology_id
+```
+
+## 20.8 project_images
+
+```text
+id
+project_id
+image
+alt_text
+caption
+display_order
+timestamps
+```
+
+## 20.9 skill_categories
+
+```text
+id
+name
+slug
+description
+display_order
+is_active
+timestamps
+```
+
+## 20.10 skills
+
+```text
+id
+skill_category_id
+name
+slug
+icon_key
+description
+display_order
+is_active
+timestamps
+```
+
+## 20.11 experiences
+
+```text
+id
+position
+organization
+location
+logo
+start_date
+end_date
+is_current
+description
+responsibilities
+display_order
+is_active
+timestamps
+```
+
+## 20.12 educations
+
+```text
+id
+institution
+degree
+study_program
+location
+logo
+start_year
+end_year
+description
+display_order
+is_active
+timestamps
+```
+
+## 20.13 certificate_categories
+
+```text
+id
+name
+slug
+display_order
+is_active
+timestamps
+```
+
+## 20.14 certificates
+
+```text
+id
+certificate_category_id
+title
+issuer
+issued_at
+credential_id
+credential_url
+certificate_image
+is_featured
+display_order
+is_active
+timestamps
+```
+
+## 20.15 contact_messages
+
+```text
+id
+name
+email
+organization
+subject
+message
+status
+read_at
+timestamps
+```
+
+Status:
+
+```text
+unread
+read
+archived
+```
+
+## 20.16 chatbot_faqs
+
+```text
+id
+question
+answer
+keywords
+action_label
+action_url
+priority
+is_active
+timestamps
+```
+
+## 20.17 chatbot_sessions
+
+Opsional untuk MVP, tetapi boleh dibuat.
+
+```text
+id
+session_token
+started_at
+last_activity_at
+timestamps
+```
+
+## 20.18 chatbot_messages
+
+Opsional untuk MVP.
+
+```text
+id
+chatbot_session_id
+role
+content
+provider
+status
+response_time
+fallback_used
+timestamps
+```
+
+Jangan menyimpan data sensitif, API key, atau IP mentah.
+
+## 20.19 analytics_events
+
+Gunakan analytics internal sederhana hanya jika implementasinya tidak terlalu berat.
+
+```text
+id
+event_name
+event_data
+session_token
+created_at
+```
+
+Event awal:
+
+```text
+page_view
+project_view
+cv_download
+github_click
+linkedin_click
+chatbot_open
+chatbot_message
+```
+
+---
+
+# 21. Data Dummy dan Seeder
+
+Semua halaman harus langsung memiliki data setelah:
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+Buat seeder:
+
+```text
+AdminUserSeeder
+ProfileSeeder
+SiteSettingSeeder
+ProjectCategorySeeder
+TechnologySeeder
+ProjectSeeder
+SkillCategorySeeder
+SkillSeeder
+ExperienceSeeder
+EducationSeeder
+CertificateCategorySeeder
+CertificateSeeder
+ChatbotFaqSeeder
+```
+
+Gunakan data dummy yang realistis dan relevan dengan profil mahasiswa Informatika.
+
+Contoh proyek dummy:
+
+1. SkillMatch
+2. Editorial Desk Dashboard
+3. Pneumonia Detection
+4. Analisis Sentimen MyXL
+5. Website SD Muhammadiyah Komplek Kolombo
+6. Speech Recognition
+
+Contoh skill:
+
+```text
+React
+TypeScript
+Tailwind CSS
+Laravel
+PHP
+MySQL
+Python
+TensorFlow
+Scikit-learn
+Pandas
+Git
+GitHub
+Figma
+Docker
+```
+
+Contoh pengalaman:
+
+```text
+Coding Camp powered by DBS Foundation
+AI Engineer Learning Path
+
+Practicum Assistant
+Universitas Ahmad Dahlan
+```
+
+Contoh pendidikan:
+
+```text
+S1 Informatika
+Universitas Ahmad Dahlan
+```
+
+Gunakan placeholder lokal untuk gambar. Jangan bergantung pada URL gambar acak dari internet.
+
+Simpan placeholder pada lokasi yang rapi, misalnya:
+
+```text
+storage/app/public/placeholders/
+```
+
+Semua data dummy harus dapat diedit dan dihapus melalui dashboard.
+
+---
+
+# 22. Rich Text Editor
+
+Gunakan rich text editor yang kompatibel dengan React dan mudah dirawat.
+
+Fitur minimal:
+
+* Heading
+* Paragraph
+* Bold
+* Italic
+* List
+* Link
+* Quote
+* Code block
+* Image
+* Undo
+* Redo
+* Preview
+
+Konten harus disanitasi sebelum dirender.
+
+Jika editor menghasilkan JSON, buat renderer React yang aman.
+
+Jika editor menghasilkan HTML, sanitasi HTML pada server atau frontend sebelum ditampilkan.
+
+---
+
+# 23. Upload File
+
+Gunakan Laravel Storage.
+
+Fitur:
+
+* Preview sebelum upload
+* Validasi MIME type
+* Validasi ukuran
+* Nama file aman
+* Hapus file lama saat diganti jika tidak digunakan
+* Placeholder
+* Storage link
+
+Format gambar yang diterima:
+
+```text
+jpg
+jpeg
+png
+webp
+```
+
+Utamakan output WebP jika melakukan optimasi otomatis.
+
+Standar rasio:
+
+```text
+Project thumbnail : 16:10
+Profile image     : 1:1 atau 4:5
+Certificate       : 4:3
+Organization logo : 1:1
+Open Graph image  : 1200x630
+```
+
+Batasi ukuran upload secara wajar.
+
+---
+
+# 24. SEO
+
+Implementasikan:
+
+* Dynamic page title
+* Meta description
+* Canonical URL
+* Open Graph
+* Twitter card
+* Sitemap
+* Robots.txt
+* Structured data dasar
+* Slug proyek
+* Alt text gambar
+* Default SEO dari site settings
+
+Halaman detail proyek memiliki SEO yang dapat diedit dari dashboard.
+
+Pastikan preview link terlihat baik saat dibagikan ke WhatsApp dan LinkedIn.
+
+---
+
+# 25. Performance
+
+Target utama:
+
+* Halaman cepat dibuka.
+* Tidak ada layout shift besar.
+* Animasi tetap halus.
+* Mobile tetap nyaman.
+* Chatbot tidak membebani initial load.
+
+Implementasikan:
+
+* Lazy loading gambar
+* Responsive images
+* WebP
+* Dynamic import
+* Code splitting
+* Lazy load chatbot
+* Batasi jumlah font
+* Hindari video background besar
+* Hindari library yang tidak diperlukan
+* Optimalkan query database
+* Eager loading relationship yang diperlukan
+* Pagination
+* Cache data publik yang sesuai jika diperlukan
+
+Jangan memuat library chatbot AI sebelum chatbot dibuka jika memungkinkan.
+
+---
+
+# 26. Accessibility
+
+Implementasikan:
+
+* Semantic HTML
+* Alt text
+* Form label
+* Keyboard navigation
+* Visible focus state
+* Kontras warna yang cukup
+* Modal dapat ditutup dengan Escape
+* Focus trap pada modal dan menu
+* Tombol ikon memiliki aria-label
+* Chatbot dapat ditutup
+* Reduced motion
+* Ukuran area klik yang nyaman
+* Tidak mengandalkan warna sebagai satu-satunya indikator
+
+---
+
+# 27. Keamanan
+
+Implementasikan:
+
+* CSRF protection
+* Session authentication
+* Middleware admin
+* Server-side validation
+* Authorization
+* Rate limiting
+* Sanitasi rich text
+* Validasi upload
+* Pembatasan ukuran file
+* API key di `.env`
+* Tidak menyimpan API key di database publik
+* Tidak mengekspos stack trace kepada pengguna
+* Proteksi form kontak
+* Password hashing
+* Secure cookie pada production
+* HTTPS pada production
+* Logging tanpa data sensitif
+
+Tidak ada registrasi publik.
+
+---
+
+# 28. State yang Harus Disiapkan
+
+Setiap bagian penting harus memiliki state:
+
+```text
+Loading
+Success
+Error
+Empty
+Disabled
+Offline
+```
+
+Contoh:
+
+* Skeleton daftar proyek
+* Empty state belum ada proyek
+* Empty state belum ada sertifikat
+* Error saat upload
+* Toast saat berhasil menyimpan
+* Confirm dialog sebelum menghapus
+* Chatbot unavailable
+* Gambar gagal dimuat
+* CV belum tersedia
+* Halaman tidak ditemukan
+* Error server
+
+---
+
+# 29. Komponen Reusable
+
+Buat komponen reusable, minimal:
+
+```text
+AppLogo
+AppIcon
+TechnologyIcon
+Button
+IconButton
+Input
+Textarea
+Select
+Checkbox
+Switch
+Badge
+StatusBadge
+SectionHeader
+ProjectCard
+TechnologyBadge
+SkillCard
+ExperienceTimeline
+CertificateCard
+Modal
+ConfirmDialog
+Toast
+EmptyState
+ErrorState
+LoadingSkeleton
+Pagination
+SearchInput
+FilterBar
+ImageUploader
+RichTextEditor
+ThemeSwitcher
+ChatButton
+ChatWindow
+ChatMessage
+SuggestedQuestions
+TypingIndicator
+```
+
+Hindari duplikasi styling dan logika.
+
+---
+
+# 30. Struktur Folder yang Direkomendasikan
+
+Gunakan struktur yang rapi dan menyesuaikan project Laravel yang tersedia.
+
+Contoh:
+
+```text
+app/
+├── Contracts/
+├── Http/
+│   ├── Controllers/
+│   │   ├── Public/
+│   │   ├── Admin/
+│   │   └── ChatbotController.php
+│   ├── Middleware/
+│   └── Requests/
+├── Models/
+├── Policies/
+├── Services/
+│   ├── AI/
+│   ├── Portfolio/
+│   └── Media/
+└── Support/
+
+resources/js/
+├── components/
+│   ├── common/
+│   ├── public/
+│   ├── admin/
+│   ├── chatbot/
+│   └── ui/
+├── layouts/
+│   ├── PublicLayout.tsx
+│   ├── AdminLayout.tsx
+│   └── AuthLayout.tsx
+├── pages/
+│   ├── Public/
+│   ├── Admin/
+│   └── Auth/
+├── hooks/
+├── lib/
+├── types/
+└── animations/
+
+database/
+├── migrations/
+├── factories/
+└── seeders/
+```
+
+---
+
+# 31. Route yang Direkomendasikan
+
+## Publik
+
+```text
+GET /
+GET /about
+GET /projects
+GET /projects/{project:slug}
+GET /experience
+GET /certificates
+GET /contact
+POST /contact
+GET /cv
+GET /cv/download
+POST /chatbot/message
+GET /chatbot/suggestions
+```
+
+## Admin
+
+Gunakan resource route jika sesuai.
+
+```text
+GET /admin
+RESOURCE /admin/projects
+RESOURCE /admin/project-categories
+RESOURCE /admin/technologies
+RESOURCE /admin/skills
+RESOURCE /admin/skill-categories
+RESOURCE /admin/experiences
+RESOURCE /admin/educations
+RESOURCE /admin/certificates
+RESOURCE /admin/certificate-categories
+RESOURCE /admin/chatbot-faqs
+GET /admin/profile
+PUT /admin/profile
+GET /admin/settings
+PUT /admin/settings
+GET /admin/messages
+GET /admin/messages/{message}
+PATCH /admin/messages/{message}/status
+DELETE /admin/messages/{message}
+```
+
+Gunakan named routes yang konsisten.
+
+---
+
+# 32. Validasi
+
+Buat Form Request untuk operasi penting.
+
+Contoh:
+
+```text
+StoreProjectRequest
+UpdateProjectRequest
+StoreExperienceRequest
+StoreCertificateRequest
+UpdateProfileRequest
+ContactMessageRequest
+ChatbotMessageRequest
+```
+
+Error validasi harus tampil dekat field terkait pada dashboard dan form publik.
+
+---
+
+# 33. Testing
+
+Buat test untuk fitur penting.
+
+Minimal:
+
+* Admin dapat login.
+* Pengguna publik tidak dapat membuka dashboard.
+* Tidak ada registrasi publik.
+* Admin dapat membuat proyek.
+* Admin dapat memperbarui proyek.
+* Admin dapat menghapus atau mengarsipkan proyek.
+* Hanya proyek published yang tampil ke publik.
+* Featured projects tampil di halaman utama.
+* Slug proyek berfungsi.
+* Form kontak tervalidasi.
+* Pesan kontak tersimpan.
+* Rate limit kontak bekerja.
+* Chatbot memvalidasi input.
+* Chatbot menggunakan Groq terlebih dahulu.
+* Chatbot berpindah ke Gemini saat Groq gagal.
+* Chatbot menggunakan fallback saat kedua provider gagal.
+* API key tidak dikirim ke frontend.
+* Download CV berfungsi.
+* Seeder menghasilkan data awal.
+* Halaman publik dapat dirender.
+* Halaman 404 berfungsi.
+
+Gunakan mock atau fake HTTP request untuk test Groq dan Gemini. Jangan memanggil API asli saat testing.
+
+---
+
+# 34. Acceptance Criteria
+
+Project dianggap selesai apabila:
+
+1. Project dapat diinstal dan dijalankan tanpa error.
+2. Migration dan seeder berhasil.
+3. Data dummy tampil di website publik.
+4. Data dummy tampil di dashboard admin.
+5. Admin dapat mengedit konten tanpa mengubah kode.
+6. Perubahan dashboard muncul pada website publik.
+7. Admin dapat mengelola proyek lengkap dengan gambar dan teknologi.
+8. Proyek draft tidak tampil ke publik.
+9. Proyek published tampil ke publik.
+10. Featured project tampil di beranda.
+11. Website responsif pada mobile, tablet, dan desktop.
+12. Dark mode, light mode, dan system mode bekerja.
+13. GSAP digunakan pada animasi utama.
+14. Motion digunakan pada interaksi UI.
+15. Animasi mendukung reduced motion.
+16. Form kontak bekerja dan tersimpan.
+17. Chatbot dapat menjawab dari data portofolio.
+18. Chatbot menggunakan Groq sebagai provider utama.
+19. Gemini digunakan saat Groq gagal.
+20. Fallback statis muncul saat kedua provider gagal.
+21. API key tidak terlihat di browser.
+22. CV dapat diubah melalui dashboard.
+23. Ikon UI konsisten menggunakan Lucide.
+24. Logo teknologi konsisten menggunakan Simple Icons.
+25. SEO dasar tersedia.
+26. Loading, empty, error, dan success state tersedia.
+27. Test fitur penting berhasil.
+28. Build frontend berhasil.
+29. Tidak ada TypeScript error penting.
+30. Tidak ada hardcoded content utama di halaman publik.
+
+---
+
+# 35. Tahapan Implementasi
+
+Kerjakan dengan urutan berikut.
+
+## Phase 1 — Project Foundation
+
+* Setup Laravel, React, TypeScript, Inertia, Tailwind.
+* Setup shadcn/ui.
+* Setup authentication.
+* Hilangkan registrasi publik.
+* Setup public layout dan admin layout.
+* Setup theme.
+* Setup icon system.
+* Setup dasar design tokens.
+
+## Phase 2 — Database dan Seeder
+
+* Buat migration.
+* Buat model dan relationship.
+* Buat factory.
+* Buat seeder.
+* Buat akun admin dummy.
+* Pastikan `migrate:fresh --seed` berhasil.
+
+## Phase 3 — Dashboard Content Management
+
+* Dashboard overview.
+* Profile.
+* Site settings.
+* Project categories.
+* Technologies.
+* Projects.
+* Skills.
+* Experiences.
+* Education.
+* Certificates.
+* CV.
+* Contact messages.
+* Chatbot FAQ.
+
+## Phase 4 — Public Portfolio
+
+* Home.
+* About.
+* Projects.
+* Project detail.
+* Experience.
+* Certificates.
+* Contact.
+* CV.
+* Footer.
+* Responsive navigation.
+
+## Phase 5 — Animation
+
+* GSAP hero.
+* ScrollTrigger section.
+* Project showcase.
+* Experience reveal.
+* Motion card.
+* Motion modal.
+* Motion mobile menu.
+* Motion chatbot.
+* Reduced motion support.
+
+## Phase 6 — Chatbot
+
+* FAQ resolver.
+* Portfolio context builder.
+* Groq provider.
+* Gemini provider.
+* AI router.
+* Endpoint.
+* Chat UI.
+* Suggested questions.
+* Rate limit.
+* Error fallback.
+* Tests dengan HTTP fake.
+
+## Phase 7 — SEO, Performance, dan Accessibility
+
+* Metadata.
+* Open Graph.
+* Sitemap.
+* Robots.
+* Lazy loading.
+* Image optimization.
+* Keyboard navigation.
+* Focus states.
+* ARIA.
+* Responsive testing.
+
+## Phase 8 — Final Verification
+
+Jalankan:
+
+```bash
+php artisan migrate:fresh --seed
+php artisan test
+npm run build
+```
+
+Jalankan juga formatter dan type checking sesuai package project.
+
+Perbaiki seluruh error yang ditemukan sebelum menyatakan fitur selesai.
+
+---
+
+# 36. Aturan Output Coding Agent
+
+Setelah membaca dokumen ini:
+
+1. Jelaskan secara singkat kondisi awal project.
+2. Buat rencana pengerjaan berdasarkan phase.
+3. Mulai implementasi dari fondasi.
+4. Jangan hanya memberikan contoh kode; terapkan langsung ke file project.
+5. Setelah setiap phase, periksa error dan integrasi.
+6. Jangan menghapus file penting tanpa alasan.
+7. Jangan mengubah requirement utama.
+8. Jangan membuat mock frontend yang tidak terhubung ke backend.
+9. Jangan meninggalkan tombol yang tidak berfungsi.
+10. Jangan menggunakan data hardcoded untuk konten utama.
+11. Jangan menggunakan API AI dari browser.
+12. Gunakan fallback yang jelas jika layanan eksternal gagal.
+13. Berikan ringkasan file yang dibuat atau diubah.
+14. Berikan perintah yang perlu dijalankan.
+15. Laporkan dengan jujur bagian yang belum dapat diselesaikan.
+16. Jangan menyatakan selesai sebelum migration, seeder, test, dan build diperiksa.
+
+---
+
+# 37. Hasil Akhir yang Diharapkan
+
+Hasil akhir adalah website portofolio full-stack yang:
+
+* Modern
+* Profesional
+* Responsif
+* Interaktif
+* Mudah dikelola
+* Memiliki dashboard CMS
+* Memiliki data dummy yang dapat diedit
+* Memiliki studi kasus proyek
+* Memiliki chatbot AI
+* Memiliki sistem fallback Groq ke Gemini
+* Aman
+* SEO friendly
+* Accessible
+* Memiliki performa baik
+* Siap dikembangkan menjadi portofolio asli Aditya

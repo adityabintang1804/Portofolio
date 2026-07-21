@@ -1,0 +1,13 @@
+import { Button } from '@/Components/ui/button';
+import AdminLayout from '@/Layouts/AdminLayout';
+import { Head, Link, router } from '@inertiajs/react';
+import { useState, type FormEvent } from 'react';
+
+type Message = { id: number; name: string; email: string; subject: string; status: string; created_at: string };
+type Page = { data: Message[]; links: { url: string | null; label: string; active: boolean }[] };
+
+export default function MessagesIndex({ messages, filters }: { messages: Page; filters: { search?: string; status?: string } }) {
+    const [search, setSearch] = useState(filters.search ?? ''); const [status, setStatus] = useState(filters.status ?? '');
+    const submit = (event: FormEvent) => { event.preventDefault(); router.get(route('admin.messages.index'), { search, status }, { preserveState: true }); };
+    return <AdminLayout><Head title="Pesan Masuk" /><div><p className="text-sm text-accent">Komunikasi</p><h1 className="mt-1 font-heading text-3xl font-semibold">Pesan Masuk</h1></div><form onSubmit={submit} className="mt-6 flex flex-wrap gap-2"><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari nama, email, atau subjek..." className="min-h-10 min-w-64 flex-1 rounded-md border bg-surface px-3" /><select value={status} onChange={(e) => setStatus(e.target.value)} className="rounded-md border bg-surface px-3"><option value="">Semua status</option><option value="unread">Belum dibaca</option><option value="read">Dibaca</option><option value="archived">Diarsipkan</option></select><Button variant="outline">Filter</Button></form><div className="mt-5 divide-y overflow-hidden rounded-lg border bg-surface">{messages.data.map((message) => <Link key={message.id} href={route('admin.messages.show', message.id)} className={`block p-4 transition hover:bg-surface-secondary ${message.status === 'unread' ? 'border-l-4 border-l-primary' : ''}`}><div className="flex flex-wrap justify-between gap-2"><span className="font-medium">{message.name} <span className="font-normal text-muted">· {message.email}</span></span><span className="text-xs text-muted">{new Date(message.created_at).toLocaleDateString('id-ID')}</span></div><p className="mt-1 text-sm text-muted">{message.subject}</p></Link>)}{!messages.data.length && <p className="p-8 text-center text-muted">Belum ada pesan.</p>}</div><div className="mt-5 flex gap-2">{messages.links.map((link, i) => link.url ? <Link key={i} href={link.url} className={`rounded border px-3 py-2 text-sm ${link.active ? 'bg-primary text-primary-foreground' : ''}`} dangerouslySetInnerHTML={{ __html: link.label }} /> : null)}</div></AdminLayout>;
+}
